@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wms.mapper.WmsBinMapper">
+  <resultMap id="BaseResultMap" type="com.ruoyi.wms.domain.WmsBin">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="bin_code" jdbcType="VARCHAR" property="binCode" />
+    <result column="bin_bar_code" jdbcType="VARCHAR" property="binBarCode" />
+    <result column="bin_name" jdbcType="VARCHAR" property="binName" />
+    <result column="bin_type" jdbcType="CHAR" property="binType" />
+    <result column="bin_deg" jdbcType="CHAR" property="binDeg" />
+    <result column="bin_store" jdbcType="VARCHAR" property="binStore" />
+    <result column="bin_customer" jdbcType="VARCHAR" property="binCustomer" />
+    <result column="bin_volume" jdbcType="DOUBLE" property="binVolume" />
+    <result column="bin_area" jdbcType="DOUBLE" property="binArea" />
+    <result column="bin_weight" jdbcType="DOUBLE" property="binWeight" />
+    <result column="bin_length" jdbcType="DOUBLE" property="binLength" />
+    <result column="bin_width" jdbcType="DOUBLE" property="binWidth" />
+    <result column="bin_height" jdbcType="DOUBLE" property="binHeight" />
+    <result column="bin_status" jdbcType="CHAR" property="binStatus" />
+    <result column="bin_is_delete" jdbcType="CHAR" property="binIsDelete" />
+    <result column="bin_good_type" jdbcType="CHAR" property="binGoodType" />
+    <result column="bin_xnode" jdbcType="BIGINT" property="binXnode" />
+    <result column="bin_ynode" jdbcType="BIGINT" property="binYnode" />
+    <result column="bin_znode" jdbcType="BIGINT" property="binZnode" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+  </resultMap>
+</mapper>

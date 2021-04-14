@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wms.mapper.WmsStoreMapper">
+
+    <resultMap type="com.ruoyi.wms.domain.WmsStore" id="WmsStoreResult">
+        <id property="id" column="id"/>
+        <result property="storeCode" jdbcType="VARCHAR" column="store_code"/>
+        <result property="storeName" jdbcType="VARCHAR" column="store_name"/>
+        <result property="storeQuality" jdbcType="VARCHAR" column="store_quality"/>
+        <result property="storeStatus" jdbcType="CHAR" column="store_status"/>
+        <result property="storeIsDelete" jdbcType="CHAR" column="store_is_delete"/>
+        <result property="createBy" jdbcType="VARCHAR" column="create_by"/>
+        <result property="createTime" jdbcType="VARCHAR" column="create_time"/>
+        <result property="updateBy" jdbcType="VARCHAR" column="update_by"/>
+        <result property="updateTime" jdbcType="VARCHAR" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectStoreVo">
+        select distinct ws.id, ws.store_code, ws.store_name, ws.store_quality,
+        ws.store_status, ws.create_by, ws.create_time
+        from wms_store ws
+    </sql>
+    <insert id="insertStore">
+        insert into wms_store(store_code, store_name, store_quality, store_status, create_by, update_by)
+        values(#{storeCode}, #{storeName}, #{storeQuality}, #{storeStatus}, #{createBy}, #{createBy})
+    </insert>
+    <update id="updateStore">
+        update wms_store
+        set store_code = #{storeCode}, store_name = #{storeName}, update_by = #{updateBy}, store_status = #{storeStatus}
+        where id = #{id}
+    </update>
+    <update id="updateStoreStatus">
+        update wms_store
+        set store_status = #{storeStatus}
+        where id = #{id}
+    </update>
+    <delete id="deleteStoreByIds">
+        update wms_store set store_is_delete = 1 where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectStoreList" resultType="com.ruoyi.wms.domain.WmsStore" resultMap="WmsStoreResult">
+        <include refid="selectStoreVo"/>
+        where ws.store_is_delete = 0
+        <if test="storeCode != null and storeCode != ''">
+            and ws.store_code like concat('%', #{storeCode}, '%')
+        </if>
+        <if test="storeName != null and storeName != ''">
+            and ws.store_name like concat('%', #{storeName}, '%')
+        </if>
+        <if test="storeStatus != null">
+            and ws.store_status = #{storeStatus}
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(ws.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            and date_format(ws.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+        </if>
+    </select>
+    <select id="checkStoreCodeUnique" resultMap="WmsStoreResult">
+        <include refid="selectStoreVo"/>
+        where ws.store_code = #{storeCode} limit 1
+    </select>
+    <select id="checkStoreNameUnique" resultMap="WmsStoreResult">
+        <include refid="selectStoreVo"/>
+        where ws.store_name = #{storeName} limit 1
+    </select>
+
+</mapper>
