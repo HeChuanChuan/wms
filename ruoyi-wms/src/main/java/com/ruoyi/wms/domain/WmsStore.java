@@ -17,7 +17,7 @@ public class WmsStore extends BaseEntity {
      * 仓库ID
      */
     @Excel(name = "仓库序号", cellType = Excel.ColumnType.NUMERIC)
-    private Long id;
+    private Long storeId;
 
     /**
      * 仓库编码

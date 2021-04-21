@@ -9,7 +9,7 @@ public class WmsBin extends BaseEntity {
     /**
      * 主键ID
      */
-    private Long id;
+    private Long binId;
 
     /**
      * 库位编码
@@ -54,6 +54,8 @@ public class WmsBin extends BaseEntity {
     /**
      * 库位所属客户
      */
+    private WmsCustomer customer;
+
     /**
      * 库位体积
      */

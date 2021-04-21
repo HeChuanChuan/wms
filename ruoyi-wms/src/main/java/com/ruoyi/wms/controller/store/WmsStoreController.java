@@ -9,7 +9,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.wms.domain.WmsStore;
-import com.ruoyi.wms.service.WmsStoreService;
+import com.ruoyi.wms.service.impl.WmsStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -81,10 +81,20 @@ public class WmsStoreController extends BaseController {
     @Log(title = "仓库管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('wms:store:export')")
     @GetMapping("/export")
-    public AjaxResult export(WmsStore store)
-    {
+    public AjaxResult export(WmsStore store) {
         List<WmsStore> list = storeService.list(store);
         ExcelUtil<WmsStore> util = new ExcelUtil<WmsStore>(WmsStore.class);
         return util.exportExcel(list, "仓库数据");
+    }
+
+    /**
+     * 获得仓库选择框列表
+     *
+     * @return
+     */
+    @GetMapping("/optionselect")
+    public AjaxResult optionselect() {
+        List<WmsStore> posts = storeService.selectStoreAll();
+        return AjaxResult.success(posts);
     }
 }

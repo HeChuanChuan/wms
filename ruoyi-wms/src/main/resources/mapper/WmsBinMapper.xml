@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.wms.mapper.WmsBinMapper">
-  <resultMap id="BaseResultMap" type="com.ruoyi.wms.domain.WmsBin">
-    <id column="id" jdbcType="BIGINT" property="id" />
+  <resultMap id="WmsBinResult" type="com.ruoyi.wms.domain.WmsBin">
+    <id column="bin_id" jdbcType="BIGINT" property="binId" />
     <result column="bin_code" jdbcType="VARCHAR" property="binCode" />
     <result column="bin_bar_code" jdbcType="VARCHAR" property="binBarCode" />
     <result column="bin_name" jdbcType="VARCHAR" property="binName" />
     <result column="bin_type" jdbcType="CHAR" property="binType" />
     <result column="bin_deg" jdbcType="CHAR" property="binDeg" />
-    <result column="bin_store" jdbcType="VARCHAR" property="binStore" />
-    <result column="bin_customer" jdbcType="VARCHAR" property="binCustomer" />
+    <result column="store_id" jdbcType="VARCHAR" property="binStore" />
+    <result column="cus_id" jdbcType="VARCHAR" property="binCustomer" />
     <result column="bin_volume" jdbcType="DOUBLE" property="binVolume" />
     <result column="bin_area" jdbcType="DOUBLE" property="binArea" />
     <result column="bin_weight" jdbcType="DOUBLE" property="binWeight" />
@@ -26,5 +26,56 @@
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <association property="store" column="store_id" javaType="com.ruoyi.wms.domain.WmsStore" resultMap="storeResult"/>
+    <association property="customer" column="cus_id" javaType="com.ruoyi.wms.domain.WmsCustomer" resultMap="customerResult"/>
   </resultMap>
+
+  <resultMap id="storeResult" type="com.ruoyi.wms.domain.WmsStore">
+    <id property="storeId" column="store_id"/>
+    <result property="storeCode" column="store_code"/>
+    <result property="storeName" column="store_name"/>
+    <result property="storeQuality" column="store_quality"/>
+    <result property="storeStatus" column="store_status"/>
+  </resultMap>
+
+  <resultMap id="customerResult" type="com.ruoyi.wms.domain.WmsCustomer">
+    <id property="cusId" column="cus_id"/>
+    <result property="cusCode" column="cus_code"/>
+    <result property="cusSimpleName" column="cus_simple_name"/>
+    <result property="cusFullName" column="cus_full_name"/>
+    <result property="cusStatus" column="cus_status"/>
+  </resultMap>
+
+  <sql id="selectBinVo">
+    select wb.bin_id, wb.bin_code, wb.bin_bar_code, wb.bin_name, wb.bin_type,
+    wb.bin_deg, wb.bin_volume, wb.bin_area, wb.bin_weight, wb.bin_length,
+    wb.bin_width, wb.bin_height, wb.bin_status, wb.bin_is_delete, wb.bin_good_type,
+    wb.bin_xnode, wb.bin_ynode, wb.bin_znode,
+    ws.store_code, ws.store_name, ws.store_quality, ws.store_status,
+    wc.cus_id, wc.cus_code, wc.cus_simple_name, wc.cus_full_name, wc.cus_status
+    from wms_bin wb
+        left join wms_store ws on wb.bin_store = ws.store_id
+        left join wms_customer wc on wb.bin_customer = wc.cus_id
+  </sql>
+
+  <select id="selectBinList" resultType="com.ruoyi.wms.domain.WmsBin" resultMap="WmsBinResult">
+    <include refid="selectBinVo"/>
+    where wb.bin_is_delete = 0 and ws.store_is_delete = 0 and wc.cus_is_delete = 0
+    <if test="binCode != null and binCode != ''">
+      and wb.bin_code like concat('%', #{binCode}, '%')
+    </if>
+    <if test="binName != null and binName != ''">
+      and wb.bin_name like concat('%', #{binName}, '%')
+    </if>
+    <if test="binStatus != null">
+      and wb.bin_status = #{binStatus}
+    </if>
+    <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+      and date_format(wb.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+    </if>
+    <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+      and date_format(wb.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+    </if>
+  </select>
+
 </mapper>

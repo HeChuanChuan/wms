@@ -13,6 +13,8 @@ public interface WmsStoreMapper {
 
     List<WmsStore> selectStoreList(WmsStore store);
 
+    List<WmsStore> selectStoreAll();
+
     int insertStore(WmsStore store);
 
     int updateStore(WmsStore store);

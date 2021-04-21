@@ -1,11 +1,10 @@
-package com.ruoyi.wms.service;
+package com.ruoyi.wms.service.impl;
 
 import com.ruoyi.common.constant.StoreConstants;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.wms.domain.WmsStore;
 import com.ruoyi.wms.mapper.WmsStoreMapper;
-import com.ruoyi.wms.mapper.WmsStoreMapper;
-import com.ruoyi.wms.service.impl.IWmsStoreService;
+import com.ruoyi.wms.service.IWmsStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +30,16 @@ public class WmsStoreService implements IWmsStoreService {
     @Override
     public List<WmsStore> list(WmsStore store) {
         return wmStoreMapper.selectStoreList(store);
+    }
+
+    /**
+     * 查询所有仓库
+     *
+     * @return
+     */
+    @Override
+    public List<WmsStore> selectStoreAll() {
+        return wmStoreMapper.selectStoreAll();
     }
 
     /**
@@ -85,9 +94,9 @@ public class WmsStoreService implements IWmsStoreService {
      */
     @Override
     public String checkStoreNameUnique(WmsStore store) {
-        Long id = StringUtils.isNull(store.getId()) ? -1L : store.getId();
+        Long id = StringUtils.isNull(store.getStoreId()) ? -1L : store.getStoreId();
         WmsStore wmsStore = wmStoreMapper.checkStoreNameUnique(store.getStoreName());
-        if (StringUtils.isNotNull(wmsStore) && wmsStore.getId().longValue() != id.longValue()) {
+        if (StringUtils.isNotNull(wmsStore) && wmsStore.getStoreId().longValue() != id.longValue()) {
             return StoreConstants.NOT_UNIQUE;
         }
         return StoreConstants.UNIQUE;
@@ -101,9 +110,9 @@ public class WmsStoreService implements IWmsStoreService {
      */
     @Override
     public String checkStoreCodeUnique(WmsStore store) {
-        Long id = StringUtils.isNull(store.getId()) ? -1L : store.getId();
+        Long id = StringUtils.isNull(store.getStoreId()) ? -1L : store.getStoreId();
         WmsStore wmsStore = wmStoreMapper.checkStoreCodeUnique(store.getStoreCode());
-        if (StringUtils.isNotNull(wmsStore) && wmsStore.getId().longValue() != id.longValue()) {
+        if (StringUtils.isNotNull(wmsStore) && wmsStore.getStoreId().longValue() != id.longValue()) {
             return StoreConstants.NOT_UNIQUE;
         }
         return StoreConstants.UNIQUE;

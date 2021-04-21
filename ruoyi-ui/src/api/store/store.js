@@ -50,9 +50,17 @@ export function delStore(id) {
 
 //导出仓库信息
 export function exportStore(query) {
-    return request({
-        url: '/wms/store/export',
-        method: 'get',
-        params: query
-      })
+  return request({
+    url: '/wms/store/export',
+    method: 'get',
+    params: query
+  })
+}
+
+//获取仓库选择框列表
+export function optionselect() {
+  return request({
+    url: '/wms/store/optionselect',
+    method: 'get',
+  })
 }

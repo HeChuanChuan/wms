@@ -6,20 +6,20 @@
       v-show="showSearch"
       :inline="true"
     >
-      <el-form-item label="仓库编码" prop="storeCode">
+      <el-form-item label="库位编码" prop="binCode">
         <el-input
-          v-model="queryParams.storeCode"
-          placeholder="请输入仓库编码"
+          v-model="queryParams.binCode"
+          placeholder="请输入库位编码"
           clearable
           size="small"
           style="width: 240px"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="storeStatus">
+      <el-form-item label="状态" prop="binStatus">
         <el-select
-          v-model="queryParams.storeStatus"
-          placeholder="仓库状态"
+          v-model="queryParams.binStatus"
+          placeholder="库位状态"
           clearable
           size="small"
           style="width: 240px"
@@ -65,7 +65,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:role:add']"
+          v-hasPermi="['wms:bin:add']"
           >新增</el-button
         >
       </el-col>
@@ -76,7 +76,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:role:edit']"
+          v-hasPermi="['wms:bin:edit']"
           >修改</el-button
         >
       </el-col>
@@ -87,7 +87,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:role:remove']"
+          v-hasPermi="['wms:bin:remove']"
           >删除</el-button
         >
       </el-col>
@@ -97,7 +97,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:role:export']"
+          v-hasPermi="['wms:bin:export']"
           >导出</el-button
         >
       </el-col>
@@ -109,34 +109,59 @@
 
     <el-table
       v-loading="loading"
-      :data="storeList"
+      :data="binList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="仓库序号" prop="id" width="120" />
+      <el-table-column label="库位序号" prop="id" width="120" />
       <el-table-column
-        label="仓库编码"
-        prop="storeCode"
+        label="库位编码"
+        prop="binCode"
         :show-overflow-tooltip="true"
-        width="150"
+        width="100"
       />
       <el-table-column
-        label="仓库名称"
-        prop="storeName"
+        label="库位条码"
+        prop="binBarCode"
         :show-overflow-tooltip="true"
-        width="150"
+        width="100"
       />
       <el-table-column
-        label="仓库属性"
-        prop="storeQuality"
+        label="库位名称"
+        prop="binName"
         :show-overflow-tooltip="true"
-        width="150"
-        :formatter="qualityFormat"
+        width="100"
+      />
+      <el-table-column
+        label="库位类型"
+        prop="binType"
+        :show-overflow-tooltip="true"
+        width="100"
+        :formatter="binTypeFormat"
+      />
+      <el-table-column
+        label="库位温度"
+        prop="binDeg"
+        :show-overflow-tooltip="true"
+        width="100"
+        :formatter="binDegFormat"
+      />
+      <el-table-column
+        label="所属仓库"
+        prop="store.storeName"
+        :show-overflow-tooltip="true"
+        width="100"
+      />
+      <el-table-column
+        label="所属客户"
+        prop="customer.cusFullName"
+        :show-overflow-tooltip="true"
+        width="100"
       />
       <el-table-column label="状态" align="center" width="100">
         <template slot-scope="scope">
           <el-switch
-            v-model="scope.row.storeStatus"
+            v-model="scope.row.binStatus"
             active-value="0"
             inactive-value="1"
             @change="handleStatusChange(scope.row)"
@@ -164,7 +189,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:role:edit']"
+            v-hasPermi="['wms:bin:edit']"
             >修改</el-button
           >
           <el-button
@@ -172,7 +197,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:role:remove']"
+            v-hasPermi="['wms:bin:remove']"
             >删除</el-button
           >
         </template>
@@ -187,35 +212,158 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改角色配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <!-- 添加或修改库位配置对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="仓库编码" prop="storeCode">
-          <el-input v-model="form.storeCode" placeholder="请输入仓库编码" />
-        </el-form-item>
-        <el-form-item label="仓库名称" prop="storeName">
-          <el-input v-model="form.storeName" placeholder="请输入仓库名称" />
-        </el-form-item>
-        <el-form-item label="仓库属性" prop="storeQuality">
-          <el-select v-model="form.storeQuality" placeholder="请选择">
-            <el-option
-              v-for="dict in qualityOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-radio-group v-model="form.storeStatus">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-              >{{ dict.dictLabel }}</el-radio
-            >
-          </el-radio-group>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="库位编码" prop="binCode">
+              <el-input v-model="form.binCode" placeholder="请输入库位编码" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="库位条码" prop="binBarCode">
+              <el-input
+                v-model="form.binBarCode"
+                placeholder="请输入库位条码"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="库位名称" prop="binName">
+              <el-input v-model="form.binName" placeholder="请输入库位名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="库位类型" prop="binType">
+              <el-select v-model="form.binType" placeholder="请选择">
+                <el-option
+                  v-for="dict in binTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="库位温度" prop="binDeg">
+              <el-select v-model="form.binDeg" placeholder="请选择">
+                <el-option
+                  v-for="dict in binDegOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="所属仓库" prop="binStore">
+              <el-select v-model="form.binStore" placeholder="请选择">
+                <el-option
+                  v-for="item in storeOptions"
+                  :key="item.storeCode"
+                  :label="item.storeName"
+                  :value="item.storeCode"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="所属客户" prop="binCustomer">
+              <el-select v-model="form.binCustomer" placeholder="请选择">
+                <el-option
+                  v-for="dict in customerOptions"
+                  :key="dict.storeCode"
+                  :label="dict.storeName"
+                  :value="dict.storeCode"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="库位体积" prop="binVolume">
+              <el-input v-model="form.binVolume" placeholder="请输入库位体积" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="库位面积" prop="binArea">
+              <el-input v-model="form.binArea" placeholder="请输入库位面积" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="库位承重" prop="binWeight">
+              <el-input v-model="form.binWeight" placeholder="请输入库位承重" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="库位长度" prop="binLength">
+              <el-input v-model="form.binLength" placeholder="请输入库位长度" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="库位宽度" prop="binWidth">
+              <el-input v-model="form.binWidth" placeholder="请输入库位宽度" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="库位高度" prop="binHeight">
+              <el-input v-model="form.binHeight" placeholder="请输入库位高度" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="商品属性" prop="binGoodType">
+              <el-input
+                v-model="form.binGoodType"
+                placeholder="请输入库位宽度"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="库位X坐标" prop="binXnode">
+              <el-input v-model="form.binXnode" placeholder="请输入库位X坐标" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="库位Y坐标" prop="binYnode">
+              <el-input v-model="form.binYnode" placeholder="请输入库位Y坐标" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="库位Z坐标" prop="binZnode">
+              <el-input v-model="form.binZnode" placeholder="请输入库位Z坐标" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态">
+              <el-radio-group v-model="form.binStatus">
+                <el-radio
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                  >{{ dict.dictLabel }}</el-radio
+                >
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -227,16 +375,19 @@
 
 <script>
 import {
-  listStore,
-  addStore,
-  updateStore,
-  delStore,
-  exportStore,
-  changeStoreStatus,
+  listBin,
+  addBin,
+  updateBin,
+  delBin,
+  exportBin,
+  changeBinStatus,
+} from "@/api/store/bin"
+import {
+  optionselect as getStoreOptionselect
 } from "@/api/store/store";
 
 export default {
-  name: "Store",
+  name: "Bin",
   data() {
     return {
       // 遮罩层
@@ -252,7 +403,7 @@ export default {
       // 总条数
       total: 0,
       // 角色表格数据
-      storeList: [],
+      binList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -265,8 +416,14 @@ export default {
       deptNodeAll: false,
       // 日期范围
       dateRange: [],
-      //仓库属性数据字典
-      qualityOptions: [],
+      //库位类型数据字典
+      binTypeOptions: [],
+      //库位类型数据字典
+      binDegOptions: [],
+      //仓库选择框列表
+      storeOptions: [],
+      //客户选择框列表
+      customerOptions: [],
       // 状态数据字典
       statusOptions: [],
       queryParams: {
@@ -284,60 +441,78 @@ export default {
       },
       // 表单校验
       rules: {
-        storeCode: [
-          { required: true, message: "仓库编码不能为空", trigger: "blur" },
+        binCode: [
+          { required: true, message: "库位编码不能为空", trigger: "blur" },
         ],
-        storeName: [
-          { required: true, message: "仓库名称不能为空", trigger: "blur" },
+        binBarCode: [
+          { required: true, message: "库位条码不能为空", trigger: "blur" },
+        ],
+        binName: [
+          { required: true, message: "库位名称不能为空", trigger: "blur" },
+        ],
+        binType: [
+          { required: true, message: "库位类型不能为空", trigger: "blur" },
+        ],
+        binDeg: [
+          { required: true, message: "库位温度不能为空", trigger: "blur" },
+        ],
+        binStore: [
+          { required: true, message: "所属仓库不能为空", trigger: "blur" },
+        ],
+        binCustomer: [
+          { required: true, message: "所属客户不能为空", trigger: "blur" },
         ],
       },
     };
   },
   created() {
     this.getList();
-    this.getDicts("wms_store_quality").then((response) => {
-      this.qualityOptions = response.data;
+    this.getDicts("wms_bin_type").then((response) => {
+      this.binTypeOptions = response.data;
+    });
+    this.getDicts("wms_bin_deg").then((response) => {
+      this.binDegOptions = response.data;
     });
     this.getDicts("sys_normal_disable").then((response) => {
       this.statusOptions = response.data;
     });
   },
   methods: {
-    /** 查询角色列表 */
+    /** 查询库位列表 */
     getList() {
       this.loading = true;
-      listStore(this.addDateRange(this.queryParams, this.dateRange)).then(
+      listBin(this.addDateRange(this.queryParams, this.dateRange)).then(
         (response) => {
-          this.storeList = response.rows;
+          this.binList = response.rows;
           this.total = response.total;
           this.loading = false;
         }
       );
     },
-    // 岗位状态字典翻译
-    qualityFormat(row, column) {
-      return this.selectDictLabel(this.qualityOptions, row.storeQuality);
+    // 库位类型字典翻译
+    binTypeFormat(row, column) {
+      return this.selectDictLabel(this.binTypeOptions, row.binType);
     },
-    // 仓库状态修改
+    // 库位温度字典翻译
+    binDegFormat(row, column) {
+      return this.selectDictLabel(this.binDegOptions, row.binDeg);
+    },
+    // 库位状态修改
     handleStatusChange(row) {
-      let text = row.storeStatus === 1 ? "停用" : "启用";
-      this.$confirm(
-        "确认要" + text + '"' + row.storeName + '"仓库吗?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      let text = row.binStatus === 1 ? "停用" : "启用";
+      this.$confirm("确认要" + text + '"' + row.binName + '"仓库吗?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
-          return changeStoreStatus(row.id, row.storeStatus);
+          return changeBinStatus(row.id, row.binStatus);
         })
         .then(() => {
           this.msgSuccess(text + "成功");
         })
         .catch(function () {
-          row.storeStatus = row.storeStatus === 0 ? 1 : 0;
+          row.binStatus = row.binStatus === 0 ? 1 : 0;
         });
     },
     // 取消按钮
@@ -383,27 +558,30 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加仓库";
+      this.title = "添加库位";
+      getStoreOptionselect().then(response => {
+        this.storeOptions = response.data;
+      })
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       this.form = row;
       this.open = true;
-      this.title = "修改仓库";
+      this.title = "修改库位";
     },
     /** 提交按钮 */
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateStore(this.form).then((response) => {
+            updateBin(this.form).then((response) => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addStore(this.form).then((response) => {
+            addBin(this.form).then((response) => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -415,13 +593,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除仓库序号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除库位序号为"' + ids + '"的数据项?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(function () {
-          return delStore(ids);
+          return delBin(ids);
         })
         .then(() => {
           this.getList();
@@ -431,13 +609,13 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有仓库数据项?", "警告", {
+      this.$confirm("是否确认导出所有库位数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(function () {
-          return exportStore(queryParams);
+          return exportBin(queryParams);
         })
         .then((response) => {
           this.download(response.msg);

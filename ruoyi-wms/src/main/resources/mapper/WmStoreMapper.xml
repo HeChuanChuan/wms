@@ -5,7 +5,7 @@
 <mapper namespace="com.ruoyi.wms.mapper.WmsStoreMapper">
 
     <resultMap type="com.ruoyi.wms.domain.WmsStore" id="WmsStoreResult">
-        <id property="id" column="id"/>
+        <id property="storeId" column="store_id"/>
         <result property="storeCode" jdbcType="VARCHAR" column="store_code"/>
         <result property="storeName" jdbcType="VARCHAR" column="store_name"/>
         <result property="storeQuality" jdbcType="VARCHAR" column="store_quality"/>
@@ -18,7 +18,7 @@
     </resultMap>
 
     <sql id="selectStoreVo">
-        select distinct ws.id, ws.store_code, ws.store_name, ws.store_quality,
+        select distinct ws.store_id, ws.store_code, ws.store_name, ws.store_quality,
         ws.store_status, ws.create_by, ws.create_time
         from wms_store ws
     </sql>
@@ -34,12 +34,12 @@
     <update id="updateStoreStatus">
         update wms_store
         set store_status = #{storeStatus}
-        where id = #{id}
+        where store_id = #{storeId}
     </update>
     <delete id="deleteStoreByIds">
-        update wms_store set store_is_delete = 1 where id in
-        <foreach collection="array" item="id" open="(" separator="," close=")">
-            #{id}
+        update wms_store set store_is_delete = 1 where store_id in
+        <foreach collection="array" item="storeId" open="(" separator="," close=")">
+            #{storeId}
         </foreach>
     </delete>
 
@@ -64,11 +64,15 @@
     </select>
     <select id="checkStoreCodeUnique" resultMap="WmsStoreResult">
         <include refid="selectStoreVo"/>
-        where ws.store_code = #{storeCode} limit 1
+        where ws.store_code = #{storeCode} ws.store_is_delete = 0 limit 1
     </select>
     <select id="checkStoreNameUnique" resultMap="WmsStoreResult">
         <include refid="selectStoreVo"/>
-        where ws.store_name = #{storeName} limit 1
+        where ws.store_name = #{storeName} and ws.store_is_delete = 0 limit 1
+    </select>
+    <select id="selectStoreAll" resultMap="WmsStoreResult">
+        <include refid="selectStoreVo"></include>
+        where ws.store_is_delete = 0
     </select>
 
 </mapper>

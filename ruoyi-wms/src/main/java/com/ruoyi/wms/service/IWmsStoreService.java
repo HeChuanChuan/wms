@@ -1,4 +1,4 @@
-package com.ruoyi.wms.service.impl;
+package com.ruoyi.wms.service;
 
 import com.ruoyi.wms.domain.WmsStore;
 
@@ -17,6 +17,13 @@ public interface IWmsStoreService {
      * @return
      */
     List<WmsStore> list(WmsStore store);
+
+    /**
+     * 查询所有仓库
+     *
+     * @return
+     */
+    List<WmsStore> selectStoreAll();
 
     /**
      * 新增保存仓库信息
