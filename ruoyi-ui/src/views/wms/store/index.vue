@@ -65,7 +65,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:role:add']"
+          v-hasPermi="['wms:store:add']"
           >新增</el-button
         >
       </el-col>
@@ -76,7 +76,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:role:edit']"
+          v-hasPermi="['wms:store:edit']"
           >修改</el-button
         >
       </el-col>
@@ -87,7 +87,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:role:remove']"
+          v-hasPermi="['wms:store:remove']"
           >删除</el-button
         >
       </el-col>
@@ -97,7 +97,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:role:export']"
+          v-hasPermi="['wms:store:export']"
           >导出</el-button
         >
       </el-col>
@@ -113,7 +113,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="仓库序号" prop="id" width="120" />
+      <el-table-column label="仓库序号" prop="storeId" width="120" />
       <el-table-column
         label="仓库编码"
         prop="storeCode"
@@ -320,7 +320,7 @@ export default {
     },
     // 仓库状态修改
     handleStatusChange(row) {
-      let text = row.storeStatus === 1 ? "停用" : "启用";
+      let text = row.storeStatus === "0" ? "启用" : "停用";
       this.$confirm(
         "确认要" + text + '"' + row.storeName + '"仓库吗?',
         "警告",
@@ -331,13 +331,13 @@ export default {
         }
       )
         .then(function () {
-          return changeStoreStatus(row.id, row.storeStatus);
+          return changeStoreStatus(row.storeId, row.storeStatus);
         })
         .then(() => {
           this.msgSuccess(text + "成功");
         })
         .catch(function () {
-          row.storeStatus = row.storeStatus === 0 ? 1 : 0;
+          row.storeStatus = row.storeStatus === "0" ? "1" : "0";
         });
     },
     // 取消按钮

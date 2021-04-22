@@ -28,9 +28,9 @@ export function updateStore(data) {
 }
 
 //仓库状态修改
-export function changeStoreStatus(id, storeStatus) {
+export function changeStoreStatus(storeId, storeStatus) {
   const data = {
-    id,
+    storeId,
     storeStatus
   }
   return request({
@@ -54,13 +54,5 @@ export function exportStore(query) {
     url: '/wms/store/export',
     method: 'get',
     params: query
-  })
-}
-
-//获取仓库选择框列表
-export function optionselect() {
-  return request({
-    url: '/wms/store/optionselect',
-    method: 'get',
   })
 }

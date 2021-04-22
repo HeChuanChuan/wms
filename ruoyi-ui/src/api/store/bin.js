@@ -56,3 +56,11 @@ export function exportBin(query) {
         params: query
       })
 }
+
+//获取仓库选择框列表
+export function getStoreOptionselect() {
+    return request({
+      url: '/wms/store/optionselect',
+      method: 'get',
+    })
+  }

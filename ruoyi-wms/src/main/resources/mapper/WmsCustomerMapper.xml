@@ -1,41 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.wms.mapper.WmsCustomerMapper">
-  <resultMap id="BaseResultMap" type="com.ruoyi.wms.domain.WmsCustomer">
-    <id column="cus_id" jdbcType="BIGINT" property="cusId" />
-    <result column="cus_full_name" jdbcType="VARCHAR" property="cusFullName" />
-    <result column="cus_simple_name" jdbcType="VARCHAR" property="cusSimpleName" />
-    <result column="cus_code" jdbcType="VARCHAR" property="cusCode" />
-    <result column="cus_english_name" jdbcType="VARCHAR" property="cusEnglishName" />
-    <result column="cus_code_before" jdbcType="VARCHAR" property="cusCodeBefore" />
-    <result column="cus_name_before" jdbcType="VARCHAR" property="cusNameBefore" />
-    <result column="cus_level" jdbcType="TINYINT" property="cusLevel" />
-    <result column="cus_industry" jdbcType="VARCHAR" property="cusIndustry" />
-    <result column="cus_sign_time" jdbcType="TIMESTAMP" property="cusSignTime" />
-    <result column="cus_expire_time" jdbcType="TIMESTAMP" property="cusExpireTime" />
-    <result column="cus_org_code" jdbcType="VARCHAR" property="cusOrgCode" />
-    <result column="cus_province_code" jdbcType="VARCHAR" property="cusProvinceCode" />
-    <result column="cus_city_code" jdbcType="VARCHAR" property="cusCityCode" />
-    <result column="cus_town_code" jdbcType="VARCHAR" property="cusTownCode" />
-    <result column="cus_address" jdbcType="VARCHAR" property="cusAddress" />
-    <result column="cus_post_code" jdbcType="VARCHAR" property="cusPostCode" />
-    <result column="cus_contact_man" jdbcType="VARCHAR" property="cusContactMan" />
-    <result column="cus_phone_number" jdbcType="VARCHAR" property="cusPhoneNumber" />
-    <result column="cus_mobile_number" jdbcType="VARCHAR" property="cusMobileNumber" />
-    <result column="cus_fax" jdbcType="VARCHAR" property="cusFax" />
-    <result column="cus_email_address" jdbcType="VARCHAR" property="cusEmailAddress" />
-    <result column="cus_web_address" jdbcType="VARCHAR" property="cusWebAddress" />
-    <result column="cus_legal_id_card" jdbcType="VARCHAR" property="cusLegalIdCard" />
-    <result column="cus_regis_capital" jdbcType="VARCHAR" property="cusRegisCapital" />
-    <result column="cus_money_type" jdbcType="VARCHAR" property="cusMoneyType" />
-    <result column="cus_license_numer" jdbcType="VARCHAR" property="cusLicenseNumer" />
-    <result column="cus_tax_regis_number" jdbcType="VARCHAR" property="cusTaxRegisNumber" />
-    <result column="cus_road_trans_number" jdbcType="VARCHAR" property="cusRoadTransNumber" />
-    <result column="cus_main_business" jdbcType="VARCHAR" property="cusMainBusiness" />
-    <result column="cus_regis_time" jdbcType="TIMESTAMP" property="cusRegisTime" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.ruoyi.wms.domain.WmsCustomer">
+        <id column="cus_id" jdbcType="BIGINT" property="cusId"/>
+        <result column="cus_full_name" jdbcType="VARCHAR" property="cusFullName"/>
+        <result column="cus_simple_name" jdbcType="VARCHAR" property="cusSimpleName"/>
+        <result column="cus_code" jdbcType="VARCHAR" property="cusCode"/>
+        <result column="cus_english_name" jdbcType="VARCHAR" property="cusEnglishName"/>
+        <result column="cus_code_before" jdbcType="VARCHAR" property="cusCodeBefore"/>
+        <result column="cus_name_before" jdbcType="VARCHAR" property="cusNameBefore"/>
+        <result column="cus_level" jdbcType="TINYINT" property="cusLevel"/>
+        <result column="cus_industry" jdbcType="VARCHAR" property="cusIndustry"/>
+        <result column="cus_sign_time" jdbcType="TIMESTAMP" property="cusSignTime"/>
+        <result column="cus_expire_time" jdbcType="TIMESTAMP" property="cusExpireTime"/>
+        <result column="cus_org_code" jdbcType="VARCHAR" property="cusOrgCode"/>
+        <result column="cus_province_code" jdbcType="VARCHAR" property="cusProvinceCode"/>
+        <result column="cus_city_code" jdbcType="VARCHAR" property="cusCityCode"/>
+        <result column="cus_town_code" jdbcType="VARCHAR" property="cusTownCode"/>
+        <result column="cus_address" jdbcType="VARCHAR" property="cusAddress"/>
+        <result column="cus_post_code" jdbcType="VARCHAR" property="cusPostCode"/>
+        <result column="cus_contact_man" jdbcType="VARCHAR" property="cusContactMan"/>
+        <result column="cus_phone_number" jdbcType="VARCHAR" property="cusPhoneNumber"/>
+        <result column="cus_mobile_number" jdbcType="VARCHAR" property="cusMobileNumber"/>
+        <result column="cus_fax" jdbcType="VARCHAR" property="cusFax"/>
+        <result column="cus_email_address" jdbcType="VARCHAR" property="cusEmailAddress"/>
+        <result column="cus_web_address" jdbcType="VARCHAR" property="cusWebAddress"/>
+        <result column="cus_legal_id_card" jdbcType="VARCHAR" property="cusLegalIdCard"/>
+        <result column="cus_regis_capital" jdbcType="VARCHAR" property="cusRegisCapital"/>
+        <result column="cus_money_type" jdbcType="VARCHAR" property="cusMoneyType"/>
+        <result column="cus_license_numer" jdbcType="VARCHAR" property="cusLicenseNumer"/>
+        <result column="cus_tax_regis_number" jdbcType="VARCHAR" property="cusTaxRegisNumber"/>
+        <result column="cus_road_trans_number" jdbcType="VARCHAR" property="cusRoadTransNumber"/>
+        <result column="cus_main_business" jdbcType="VARCHAR" property="cusMainBusiness"/>
+        <result column="cus_regis_time" jdbcType="TIMESTAMP" property="cusRegisTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
+    </resultMap>
+    <sql id="selectCustomerVo">
+        select wc.cus_id, wc.full_name, wc.cus_code, wc.cus_level, wc.cus_industry, wc.cus_address,
+        wc.cus_contact_man, wc.cus_phone_number, wc.cus_email_address, wc.cus_status, wc.cus_is_delete
+        from wms_customer wc
+    </sql>
+    <sql id="selectCustomerDetailVo">
+        select
+    </sql>
+    <select id="selectCustomerList" resultType="com.ruoyi.wms.domain.WmsCustomer">
+        <include refid="selectCustomerVo"/>
+        where wb.cus_is_delete = 0
+        <if test="cusCode != null and cusCode != ''">
+            and wb.cus_code like concat('%', #{cusCode}, '%')
+        </if>
+        <if test="cusFullName != null and cusFullName != ''">
+            and wb.cus_full_name like concat('%', #{cusFullName}, '%')
+        </if>
+        <if test="cusStatus != null">
+            and wb.cus_status = #{cusStatus}
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(wb.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            and date_format(wb.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+        </if>
+    </select>
 </mapper>
